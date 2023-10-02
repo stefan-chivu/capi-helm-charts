@@ -21,6 +21,9 @@ cloudName: openstack
 # This should match the version of kubelet and kubeadm in the image
 kubernetesVersion:
 
+# The bootstrapping format used by the kubeadm images
+bootstrappingFormat: cloud-init
+
 # The name of the image to use for cluster machines
 machineImage:
 # OR

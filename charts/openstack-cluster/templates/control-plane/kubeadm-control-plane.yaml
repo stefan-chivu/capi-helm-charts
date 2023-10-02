@@ -99,3 +99,23 @@ spec:
     include "openstack-cluster.kubeadmConfigSpec" |
     nindent 4
   }}
+{{- if eq .Values.bootstrappingFormat "ignition" }}
+    format: ignition
+    ignition:
+      containerLinuxConfig:
+        additionalConfig: |
+          systemd:
+            units:
+            - name: coreos-metadata-sshkeys@.service
+              enabled: true
+            - name: kubeadm.service
+              enabled: true
+              dropins:
+              - name: 10-flatcar.conf
+                contents: |
+                  [Unit]
+                  Requires=containerd.service coreos-metadata.service
+                  After=containerd.service coreos-metadata.service
+                  [Service]
+                  EnvironmentFile=/run/metadata/flatcar
+{{- end }}
