@@ -164,6 +164,14 @@ files:
     permissions: "0644"
   - path: /etc/containerd/config.toml
     content: |
+      {{- if eq $ctx.Values.bootstrappingFormat "ignition" }}
+      [plugins."io.containerd.grpc.v1.cri"]
+      sandbox_image = "registry.k8s.io/pause:3.9"
+      [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+      runtime_type = "io.containerd.runc.v2"
+      [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+      SystemdCgroup = true
+      {{- end}}
       [plugins."io.containerd.grpc.v1.cri".registry]
       config_path = "/etc/containerd/certs.d"
     owner: root:root
